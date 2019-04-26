@@ -91,12 +91,15 @@ namespace Mic.Volo.DBGenerate
         {
             await _connection.OpenAsync();
             StringBuilder sql = new StringBuilder();
-
-            sql.AppendLine($"Drop database [{dbname}];");
+            _connection.ChangeDatabase("master");
+            //sql.AppendLine("Use [master];");
+            sql.AppendLine($"DROP DATABASE [{dbname}]");
             using (SqlCommand command = new SqlCommand(sql.ToString(), _connection))
             {
                 await command.ExecuteNonQueryAsync();
             }
+            _connection.Close();
+            _connection.Dispose();
         }
         public void Dispose()
         {
